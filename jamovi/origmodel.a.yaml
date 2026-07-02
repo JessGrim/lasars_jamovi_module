@@ -1,0 +1,53 @@
+---
+name:  Origmodel
+title: Latent State Only
+menuGroup: SurveyRespStyle
+version: '1.0.0'
+jas: '1.2'
+options:
+    - name: data
+      type: Data
+
+    - name: response
+      title: Response Variable (DV)
+      type: Variable
+
+    - name: subscale
+      title: Latent States Variable
+      type: Variable
+
+    - name: subject
+      title: Participant IDs
+      type: Variable
+      
+    - name: direction
+      title: Directional Coding Variable
+      type: Variable
+      
+    - name: dirRev
+      title: Reverse-Coding Identifying Label
+      type: String
+      default: ''
+      
+    - name: resp_opts
+      title: Number of Response Options
+      type: Integer
+      default: 5
+      max: 30
+      min: 2
+      
+    - name: ls_plot
+      title: Latent state correlations
+      type: Bool
+      default: false
+      
+    - name: subj_est_table
+      title: Subject-level estimates table
+      type: Bool
+      default: false
+      
+    - name: get_subj_ests
+      title: Open Subject-Level Estimates in New Window
+      type: Action
+      action: open
+...

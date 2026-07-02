@@ -1,0 +1,69 @@
+---
+name:  Origmodel
+title: Latent State Only
+jrs:   '1.1'
+
+items:
+        
+    - name: mu_desc
+      title: Latent State Descriptives
+      type: Table
+      visible: TRUE
+      rows: ''
+      clearWith:
+        - response
+        - subscale
+        - direction
+        - subject
+        - resp_opts
+        - dirRev
+      columns:
+        - name: par
+          title: 'Parameter'
+          type: text
+        - name: num
+          title: "N"
+          type: integer
+        - name: mean
+          title: Mean
+          type: number
+          format: zto
+        - name: med
+          title: Median
+          type: number
+          format: zto
+        - name: sd
+          title: SD
+          type: number
+          format: zto
+        - name: se
+          title: SE
+          type: number
+          format: zto
+      refs:
+        - latstatonly2025
+  
+    - name: pairs_plot
+      title: De-Biased Latent State Correlations
+      type: Image
+      visible: FALSE
+      width:  500
+      height: 500
+      renderFun: .pairsplot
+      refs:
+        - GGally
+        - ggplot2
+      
+    - name: resultsTable
+      title: Subject‑level Results
+      type: Table
+      rows: all
+      columns: []
+      visible: false
+      clearWith:
+        - subject
+        - response
+        - subscale
+        - direction
+        - dirRev
+        - resp_opts

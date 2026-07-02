@@ -1,0 +1,28 @@
+refs:
+    latstatonly2025:
+        type: 'article'
+        author: Grimmond, J., Brown, S. D., & Briatte, F.
+        year: 2025
+        title: "A solution to the pervasive problem of response bias in self-reports"
+        publisher: 'Proceedings of the National Academy of Sciences'
+        volume: 122
+        issue: 3
+        pages: e2412807122
+        doi: https://doi.org/10.1073/pnas.2412807122
+        url: https://www.pnas.org/doi/10.1073/pnas.2412807122
+    
+    GGally:
+        type: 'software'
+        author: Schloerke, B., Cook, D., Larmarange, J., & Hawkins, G. E.
+        year: 2023
+        title: 'GGally: Extension to "ggplot2"'
+        publisher: '[R package]. Retrieved from https://CRAN.R-project.org/package=GGally'
+        url: https://CRAN.R-project.org/package=GGally
+        
+    ggplot2:
+        type: 'software'
+        author: Wickham, H.
+        year: 2016
+        title: 'ggplot2: Elegant Graphics for Data Analysis'
+        publisher: '[R package]. Retrieved from https://CRAN.R-project.org/package=ggplot2'
+        url: https://CRAN.R-project.org/package=ggplot2

@@ -1,0 +1,30 @@
+---
+title: What the Package Does (Title Case)
+name: LaSARS
+version: 0.0.0
+jms: '1.0'
+authors:
+  - Who wrote it
+maintainer: The package maintainer <yourself@somewhere.net>
+date: '1970-01-01'
+type: R
+description: >-
+  More about what it does (maybe more than one line) Use four spaces when
+  indenting paragraphs within the Description.
+analyses:
+  - title: Latent State and Response Style
+    name: LaSARSmodel
+    ns: LaSARS
+    category: analyses
+    menuGroup: SurveyRespStyle
+    menuTitle: Latent State and Response Style
+  - title: Latent State Only
+    name: Origmodel
+    ns: LaSARS
+    category: analyses
+    menuGroup: SurveyRespStyle
+    menuTitle: Latent State Only
+usesNative: true
+minApp: 1.0.8
+
+...

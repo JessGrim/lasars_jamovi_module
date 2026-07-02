@@ -1,0 +1,11 @@
+Package: LaSARS
+Type: Package
+Title: Explore Response Style in Survey Responding
+Version: 1.0.0
+Author: Jess Grimmond, Guy Hawkins, Scott Brown, Quentin Gronau
+Maintainer: Jess Grimmond <jess.grimmond@newcastle.edu.au>
+Description: This module allows users apply the Latent State and Response Style (LaSARS) model over survey data using maximum likelihood estimation. In doing so, less-biased estimates of latent states can be obtained, alongside interpretable response style parameters. 
+License: GPL (>= 2)
+Encoding: UTF-8
+LazyData: true
+Imports: jmvcore (>= 0.8.5), R6, GGally, ggplot2
