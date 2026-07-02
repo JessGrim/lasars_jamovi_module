@@ -1,6 +1,6 @@
 Package: LaSARS
 Type: Package
-Title: Explore Response Style in Survey Responding
+Title: Explore and Control Response Style in Survey Responding
 Version: 1.0.0
 Author: Jess Grimmond, Guy Hawkins, Scott Brown, Quentin Gronau
 Maintainer: Jess Grimmond <jess.grimmond@newcastle.edu.au>

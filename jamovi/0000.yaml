@@ -1,28 +1,27 @@
 ---
-title: What the Package Does (Title Case)
+title: Explore and Control Response Style in Survey Responding
 name: LaSARS
-version: 0.0.0
+version: 1.0.0
 jms: '1.0'
 authors:
-  - Who wrote it
-maintainer: The package maintainer <yourself@somewhere.net>
+  - Jess Grimmond, Guy Hawkins, Scott Brown, Quentin Gronau
+maintainer: Jess Grimmond <jess.grimmond@newcastle.edu.au>
 date: '1970-01-01'
 type: R
 description: >-
-  More about what it does (maybe more than one line) Use four spaces when
-  indenting paragraphs within the Description.
+  This module allows users apply the Latent State and Response Style (LaSARS) model over survey data using maximum likelihood estimation. In doing so, less-biased estimates of latent states can be obtained, alongside interpretable response style parameters. 
 analyses:
   - title: Latent State and Response Style
     name: LaSARSmodel
     ns: LaSARS
     category: analyses
-    menuGroup: SurveyRespStyle
+    menuGroup: LaSARS
     menuTitle: Latent State and Response Style
   - title: Latent State Only
     name: Origmodel
     ns: LaSARS
     category: analyses
-    menuGroup: SurveyRespStyle
+    menuGroup: LaSARS
     menuTitle: Latent State Only
 usesNative: true
 minApp: 1.0.8
