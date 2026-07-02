@@ -9,7 +9,10 @@ maintainer: Jess Grimmond <jess.grimmond@newcastle.edu.au>
 date: '1970-01-01'
 type: R
 description: >-
-  This module allows users apply the Latent State and Response Style (LaSARS) model over survey data using maximum likelihood estimation. In doing so, less-biased estimates of latent states can be obtained, alongside interpretable response style parameters. 
+  This module allows users apply the Latent State and Response Style (LaSARS)
+  model over survey data using maximum likelihood estimation. In doing so,
+  less-biased estimates of latent states can be obtained, alongside
+  interpretable response style parameters. 
 analyses:
   - title: Latent State and Response Style
     name: LaSARSmodel

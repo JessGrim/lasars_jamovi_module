@@ -1,7 +1,7 @@
 ---
 name:  LaSARSmodel
 title: Latent State and Response Style
-menuGroup: SurveyRespStyle
+menuGroup: LaSARS
 version: '1.0.0'
 jas: '1.2'
 options:

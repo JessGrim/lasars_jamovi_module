@@ -1,7 +1,7 @@
 ---
 name:  Origmodel
 title: Latent State Only
-menuGroup: SurveyRespStyle
+menuGroup: LaSARS
 version: '1.0.0'
 jas: '1.2'
 options:
