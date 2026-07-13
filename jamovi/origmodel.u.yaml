@@ -1,5 +1,5 @@
 title: Latent State Only
-name: Origmodel
+name: origmodel
 jus: '3.0'
 stage: 0
 compilerMode: aggressive

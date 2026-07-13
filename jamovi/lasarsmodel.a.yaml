@@ -1,7 +1,7 @@
 ---
-name:  LaSARSmodel
+name:  lasarsmodel
 title: Latent State and Response Style
-menuGroup: LaSARS
+menuGroup: lasars
 version: '1.0.0'
 jas: '1.2'
 options:
@@ -25,17 +25,17 @@ options:
       type: Variable
       
     - name: rev_label
-      title: Reverse-Coding Identifying Label
+      title: Reverse-coding identifying label
       type: String
       default: ''
 
     - name: estDirectPref
-      title: Estimate directional preference?
+      title: Directional Preference parameter
       type: Bool
       default: true
       
     - name: resp_opts
-      title: Number of Response Options
+      title: Number of response options
       type: Integer
       default: 5
       max: 30

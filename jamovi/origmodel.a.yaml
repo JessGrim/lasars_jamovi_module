@@ -1,7 +1,7 @@
 ---
-name:  Origmodel
+name:  origmodel
 title: Latent State Only
-menuGroup: LaSARS
+menuGroup: lasars
 version: '1.0.0'
 jas: '1.2'
 options:
@@ -25,12 +25,12 @@ options:
       type: Variable
       
     - name: dirRev
-      title: Reverse-Coding Identifying Label
+      title: Reverse-coding identifying label
       type: String
       default: ''
       
     - name: resp_opts
-      title: Number of Response Options
+      title: Number of response options
       type: Integer
       default: 5
       max: 30

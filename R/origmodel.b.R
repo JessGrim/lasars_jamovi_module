@@ -1,63 +1,20 @@
-OrigmodelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
-  "OrigmodelClass",
-  inherit = OrigmodelBase,
+origmodelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
+  "origmodelClass",
+  inherit = origmodelBase,
   private = list(
     .run = function() {
       
       #LOADING CHECKS/ERRORS####
-      #Don't run the analysis until something is in the boxes
-      if (is.null(self$options$subject))
+      if (check_required_inputs(self$options))
         return()
-      if (is.null(self$options$response))
+      if (!check_response_options(self))
         return()
-      if (is.null(self$options$subscale))
+      if (!check_direction_requirements(self, direction_required = TRUE,
+                                       dir_var_name = 'direction',
+                                       rev_label_name = 'dirRev'))
         return()
-      
-      #wait until there is something in the direction box
-      if (is.null(self$options$direction)){
-        
-        dirMissing_notice <- jmvcore::Notice$new(options=self$options, name='dirMissing')
-        dirMissing_notice$setContent("This analysis requires a directional variable.
-                                       \nIf none exists, use the Latent States and Response Style Analysis")
-        self$results$insert(1, dirMissing_notice)
-        
+      if (!check_latent_states(self))
         return()
-      }
-      
-      #Ask for a way to identify reverse coded items
-      if(!is.null(self$options$direction) &&
-         (is.null(self$options$dirRev) ||
-          is.na(self$options$dirRev) ||
-          self$options$dirRev == "")
-      )
-      {
-        negNeeded_notice <- jmvcore::Notice$new(options=self$options, name='negNeeded')
-        negNeeded_notice$setContent(paste0("Please enter the reverse-coding identifying label.
-                                            \nThis is the string or character from the '", self$options$direction, "' column 
-                                            \nused to indicate that an item is reverse-coded."))
-        self$results$insert(1, negNeeded_notice)
-        
-        return()
-      }
-      
-      #Check for more than 1 latent state
-      #wait until there is something in the direction box
-      scale_levels <- unique(self$data[[self$options$subscale]])
-      if (!is.null(self$options$subscale) && length(scale_levels) <= 1){
-        
-        tooFewLS_notice <- jmvcore::Notice$new(options=self$options, name='tooFewLS')
-        tooFewLS_notice$setContent(
-          paste0(
-            "This analysis requires more than 1 latent state.\n",
-            "The '", self$options$subscale, "' column only contains levels: ",
-            paste(scale_levels, collapse = ", ")
-          )
-        )
-        
-        self$results$insert(1, tooFewLS_notice)
-        
-        return()
-      }
       
       #THE LL FUNCTION####
       ll_func <- function(x, data, subscale, response, direction = NULL, rev_label = NULL, resp_opts) {
@@ -176,15 +133,15 @@ OrigmodelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         #Set upper and lower bounds
         upper_bound <- 20
         lower_bound <- -20
-        
+         
         #remove NA values before processing
         data <- data[!is.na(data[[response]]), ]
-        
+         
         #Run optim over each subject's data and add to a list
         results_list <- lapply(unique(data[[subject]]), function(subj) {
-          
+           
           this_subj_data <- data[data[[subject]] == subj, ]
-          
+           
           # Optional: early skip for empty / bad data
           if (nrow(this_subj_data) == 0) {
             return(list(
@@ -193,9 +150,9 @@ OrigmodelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
               error = "Empty subject data"
             ))
           }
-          
+           
           tryCatch({
-            
+             
             fit <- optim(
               par = start_vals,
               fn = ll_func,
@@ -209,12 +166,12 @@ OrigmodelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
               lower = rep(lower_bound, length(start_vals)),
               upper = rep(upper_bound, length(start_vals))
             )
-            
+             
             # normal return
             fit
-            
+             
           }, error = function(e) {
-            
+             
             # return a fake "failed" result
             list(
               par = setNames(rep(NA_real_, length(start_vals)), names(start_vals)),
@@ -223,49 +180,10 @@ OrigmodelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             )
           })
         })
-        
-        #Get subj IDs
-        subjects <- unique(data[[subject]])
-        
-        #Bind all the results together
-        results_df <- do.call(rbind, lapply(seq_along(results_list), function(i) {
-          c(
-            round(results_list[[i]]$par[grep("mu.", names(results_list[[i]]$par))], 3),
-            convergence = results_list[[i]]$convergence
-          )
-        }))
-        
-        #MANAGE RESULTS####
-        results_df <- as.data.frame(results_df)
-        
-        #Add subject IDs
-        rownames(results_df) <- unique(data[[subject]])
-        
-        #Record convergence code
-        results_df$convergence <- ifelse(results_df$convergence == 0, "Success",
-                                         ifelse(results_df$convergence == 1, "Error - Limit Reached", paste0("Error - optim code: ", results_df$convergence)))
-        
-        #Override convergence code if bound reached
-        check_cols <- setdiff(names(results_df), "convergence")
-        
-        has_upper <- apply(results_df[check_cols], 1, function(x) any(x == upper_bound))
-        has_lower <- apply(results_df[check_cols], 1, function(x) any(x == lower_bound))
-        
-        results_df$convergence <- ifelse(
-          has_upper & has_lower, "Both bounds reached",
-          ifelse(
-            has_upper, "Upper Bound Reached",
-            ifelse(
-              has_lower, "Lower Bound Reached",
-              results_df$convergence
-            )
-          )
-        )
-        
-        results_df$subject <- rownames(results_df)
-        results_df <- results_df[, c("subject", setdiff(names(results_df), "subject"))]
-        
-        #Set the state to save object
+         
+        results_df <- process_results(results_list, data, subject,
+                                      mu_indices = grep("mu.", names(results_list[[1]]$par)),
+                                      upper_bound, lower_bound)
         self$results$resultsTable$setState(results_df)
         
       } else{
@@ -274,23 +192,7 @@ OrigmodelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       
       #SUBJ-LEVEL ESTS####
       if(subj_est_table){
-        #FILL SUBJ-RESULTS TABLE####
-        for(add_col in colnames(results_df)){
-          self$results$resultsTable$addColumn(name = add_col, format = "zto,3")
-        }
-        for(add_row in 1:(nrow(results_df)-1)){
-          self$results$resultsTable$addRow(add_row)
-        }
-        
-        #Fill the table
-        for (i in seq_len(nrow(results_df))) {
-          self$results$resultsTable$setRow(
-            rowNo = i,
-            values = as.list(results_df[i, , drop = FALSE])
-          )
-        }
-        
-        self$results$resultsTable$setVisible(visible=TRUE)
+        fill_subject_results_table(self$results$resultsTable, results_df)
       }
       
       
@@ -307,33 +209,13 @@ OrigmodelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       
       #Latent State Descripts
       mu_rows <- colnames(results_df)[grepl("mu", colnames(results_df))]
-      mu_desc_table <- self$results$mu_desc
-      
-      for(i in 1:(length(mu_rows) - 1)){
-        mu_desc_table$setRow(
-          rowNo = i, values = list(
-            par = mu_rows[i],
-            num = length(results_df[[mu_rows[i]]]),
-            "mean" = mean(results_df[[mu_rows[i]]]),
-            med = median(results_df[[mu_rows[i]]]),
-            "sd" = sd(results_df[[mu_rows[i]]]),
-            se = sd(results_df[[mu_rows[i]]], na.rm = TRUE) / sqrt(sum(!is.na(results_df[[mu_rows[i]]])))
-          )
-        )
-        mu_desc_table$addRow(i)
-      }
-      final_mu_row <- length(mu_rows)
-      mu_desc_table$setRow(
-        rowNo = final_mu_row, values = list(
-          par = mu_rows[final_mu_row],
-          num = length(results_df[[mu_rows[final_mu_row]]]),
-          mean = mean(results_df[[mu_rows[final_mu_row]]]),
-          med = median(results_df[[mu_rows[final_mu_row]]]),
-          sd = sd(results_df[[mu_rows[final_mu_row]]]),
-          se = sd(results_df[[mu_rows[final_mu_row]]], na.rm = TRUE) / sqrt(sum(!is.na(results_df[[mu_rows[final_mu_row]]])))
-        )
+      fill_descriptive_table(
+        self$results$mu_desc,
+        results_df,
+        mu_rows,
+        note_key = "mu_note",
+        note_text = "Group-level estimates calculated from subject-level fits"
       )
-      mu_desc_table$setNote(key = "mu_note", note = "Group-level estimates calculated from subject-level fits")
       
       #GG_PAIRS PLOT####
       #Make plot data
@@ -369,73 +251,10 @@ OrigmodelClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     
     #PLOTTING FUNCTION
     .pairsplot=function(image, ...) {
-      
       plotData <- image$state
-      
-      if(is.null(plotData)){
+      if (is.null(plotData))
         return()
-      }
-      
-      calculate_font_size <- function(x) {
-        if (x == 0) {
-          return(3)  # Font size for 0
-        } else {
-          return(3 + 17 * (abs(x) - 0) / (1 - 0))  # Font size scaled from 3 to 20
-        }
-      }
-      
-      just_scale_mus <- plotData[, 2:ncol(plotData)]
-      
-      #Call to ggplot etc.
-      p_model <- GGally::ggpairs(plotData, 
-                                 columns = 2:ncol(plotData),
-                                 upper = 'blank', #set the upper quadrant to be blank
-                                 #diag = 'blank', #set diagonal to be blank
-                                 lower = list(continuous = GGally::wrap("points", size = 0.6, alpha = 1)), #make scatterplots in lower quadrant
-                                 axisLabels = "none", #remove axis labels/ticks
-                                 columnLabels = NULL #remove the column and row (subscale) labels
-      )
-      
-      #Print scale names in diagonal cells
-      for(i in 1:ncol(just_scale_mus)){
-        this_scale <- colnames(just_scale_mus)[i]
-        p_model[i,i] <- GGally::ggally_text(this_scale,
-                                            color = "black",
-                                            size = 3.5)
-      }
-      
-      #print cor coeffs
-      for (i in 1:(ncol(just_scale_mus) - 1)){
-        for(j in (i + 1):length(just_scale_mus)){
-          this_cor <- round(cor(just_scale_mus[i], just_scale_mus[j], method = 'spearman'), 2)
-          font_size <- as.numeric(calculate_font_size(this_cor))
-          this_cor_char <- as.character(this_cor)
-          #if the first character in the string is '-'
-          if(substr(this_cor_char, 1, 1) == '-'){
-            #start from the 3rd char in the string (the full-stop)
-            #and paste '-' in front of it 
-            if(this_cor_char != "-1" ){
-              this_cor_char <- paste0("-", substring(this_cor_char, first = 3))
-            }
-          } else{
-            #start from the 2nd char in the string (essentially, remove the first)
-            if(this_cor_char != "1" && this_cor_char != "0"){
-              this_cor_char <- substring(this_cor_char, first = 2)
-            }
-          }
-          p_model[i,j] <- GGally::ggally_text(this_cor_char,
-                                              color = "black",
-                                              size = font_size)
-        }
-      }
-      
-      #Remove the grid lines and background colours
-      p_model <- p_model + ggplot2::theme(panel.grid.minor = ggplot2::element_blank(),
-                                          panel.grid.major = ggplot2::element_blank(),
-                                          panel.background = ggplot2::element_rect(fill = "white"),
-                                          panel.border = ggplot2::element_rect(colour = "black", fill = NA))
-      
-      return(p_model)
+      build_pairs_plot(plotData)
     }
   )
 )

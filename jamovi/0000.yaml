@@ -1,12 +1,12 @@
 ---
 title: Explore and Control Response Style in Survey Responding
-name: LaSARS
+name: lasars
 version: 1.0.0
 jms: '1.0'
 authors:
   - Jess Grimmond, Guy Hawkins, Scott Brown, Quentin Gronau
 maintainer: Jess Grimmond <jess.grimmond@newcastle.edu.au>
-date: '1970-01-01'
+date: '2026-07-10'
 type: R
 description: >-
   This module allows users apply the Latent State and Response Style (LaSARS)
@@ -15,18 +15,25 @@ description: >-
   interpretable response style parameters. 
 analyses:
   - title: Latent State and Response Style
-    name: LaSARSmodel
-    ns: LaSARS
+    name: lasarsmodel
+    ns: lasars
     category: analyses
-    menuGroup: LaSARS
+    menuGroup: lasars
     menuTitle: Latent State and Response Style
   - title: Latent State Only
-    name: Origmodel
-    ns: LaSARS
+    name: origmodel
+    ns: lasars
     category: analyses
-    menuGroup: LaSARS
+    menuGroup: lasars
     menuTitle: Latent State Only
-usesNative: true
+datasets:
+  - name: lasars_data
+    path: example_lasars_data.csv
+    description: Example survey data for lasars analyses
+    tags:
+      - lasars
+      - Tutorial
+usesNative: false
 minApp: 1.0.8
 
 ...

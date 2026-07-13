@@ -1,5 +1,5 @@
 ---
-name:  Origmodel
+name:  origmodel
 title: Latent State Only
 jrs:   '1.1'
 
@@ -53,7 +53,14 @@ items:
       refs:
         - GGally
         - ggplot2
-      
+      clearWith:
+        - response
+        - subscale
+        - direction
+        - subject
+        - resp_opts
+        - rev_label
+        - dirRev
     - name: resultsTable
       title: Subject‑level Results
       type: Table

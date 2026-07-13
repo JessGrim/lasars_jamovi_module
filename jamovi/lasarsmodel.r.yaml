@@ -1,5 +1,5 @@
 ---
-name:  LaSARSmodel
+name:  lasarsmodel
 title: Latent State and Response Style
 jrs:   '1.1'
 
@@ -43,7 +43,7 @@ items:
           format: zto
   
     - name: rs_desc
-      title: Response Syle Descriptives
+      title: Response Style Descriptives
       type: Table
       visible: TRUE
       rows: ''
@@ -89,6 +89,14 @@ items:
       refs:
         - GGally
         - ggplot2
+      clearWith:
+        - response
+        - subscale
+        - direction
+        - subject
+        - resp_opts
+        - estDirectPref
+        - rev_label
       
     - name: resultsTable
       title: Subject‑level Results

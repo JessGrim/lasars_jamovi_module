@@ -1,4 +1,4 @@
-Package: LaSARS
+Package: lasars
 Type: Package
 Title: Explore and Control Response Style in Survey Responding
 Version: 1.0.0
@@ -9,3 +9,6 @@ License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
 Imports: jmvcore (>= 0.8.5), R6, GGally, ggplot2
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
