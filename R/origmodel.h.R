@@ -164,7 +164,6 @@ origmodelResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "direction",
                     "subject",
                     "resp_opts",
-                    "rev_label",
                     "dirRev")))
             self$add(jmvcore::Table$new(
                 options=options,

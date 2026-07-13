@@ -59,7 +59,6 @@ items:
         - direction
         - subject
         - resp_opts
-        - rev_label
         - dirRev
     - name: resultsTable
       title: Subject‑level Results

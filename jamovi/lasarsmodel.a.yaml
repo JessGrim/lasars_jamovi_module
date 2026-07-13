@@ -52,7 +52,7 @@ options:
       default: false
       
     - name: get_subj_ests
-      title: Open Subject-Level Estimates in New Window
+      title: Open subject-level estimates in new window
       type: Action
       action: open
 ...
